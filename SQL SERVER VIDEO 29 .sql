@@ -62,3 +62,57 @@ INSERT INTO Clientes2 VALUES (3,'Raul','Mendez','Saltillo',NULL);
 INSERT INTO Clientes2 VALUES (4,'Diana','Flores',NULL,'diana@gm.com');
 INSERT INTO Clientes2 VALUES (5,'Hugo','Castro','Puebla','hugo@gm.com');
 INSERT INTO Clientes2 VALUES (6,'Raul','Mendez','Saltillo',NULL);              -- fila repetida (id 3)
+
+select * from Empleados4;
+--1.	Muestra nombre AS empleado y salario AS sueldo_mensual.
+select nombre as Empleado, salario as Sueldo_Mensual from Empleados4;
+-- 2.	Muestra apellido con el alias [Apellido del trabajador] (con espacios).
+ select apellido as 'Apellido del trabajador' from Empleados4
+ --3.	Muestra DISTINCT puesto AS puestos_existentes (videos 28 + 29).
+ select distinct puesto as puestos_existentes from Empleados4;
+ --4.	Muestra de Plantas: nombre AS planta y ciudad AS ubicacion.
+ select * from plantas;
+ select nombre as Planta, ciudad as ubicacion from plantas;
+ -- 5.	Verifica con SELECT * FROM Empleados4 que la columna REAL sigue llamándose salario:
+ -- el alias vive solo en el resultado (a diferencia del sp_rename del video 14).
+ SELECT * FROM Empleados4
+ -- Concatenación y sus trampas (videos 29, 18, 5)
+-- 6.	Construye nombre_completo: nombre + ' ' + apellido.
+select nombre + ' ' + apellido as 'nombre y apellido' from Empleados4;
+-- 7.	Construye una ficha: nombre + ' - ' + puesto AS ficha. Trampa: ¿qué salió en la fila de Sofia (puesto NULL)?
+-- Anota: NULL contamina toda la concatenación (video 18).
+select nombre + ' - ' + puesto as ficha from empleados4;
+--  8.	PROVOCA EL ERROR: Concatena texto con número directo: 
+select nombre + ' gana ' + salario from empleados4; --. Anota el Msg de conversión (la vieja guerra de tipos, video 5).
+-- Esto sertia algo mas correcto
+select nombre as 'Se llama', salario as 'Y gana' from empleados4
+-- 9.	Corrígelo con CAST(salario AS VARCHAR) y observa la fila de Carmen (salario NULL): ¿el CAST salvó alNULL? No — anótalo.
+--10.	Construye para Clientes2: nombre + ' ' + apellido + ' (' + ciudad + ')' AS etiqueta. ¿Qué pasó con Diana (ciudadNULL)?
+select * from Clientes2;
+select nombre + ' ' + apellido + ' ('+ ciudad +')' AS etiqueta from Clientes2;
+--11.	Crea la vista v_directorio (video 26): nombre_completo concatenado y correo, solo de quienes tienen correo (ISNOT NULL).
+create view v_directorio
+as
+select nombre + ' ' + apellido as nombre_completo, correo from Empleados4 where correo is not null
+
+select * from v_directorio
+
+-- 12.	TOP 5 (video 17) del directorio con alias [Empleado] para el nombre completo.
+select top 5 nombre_completo as Empleado from v_directorio
+--13.	PROVOCA EL ERROR: Usa un alias con espacios SIN corchetes: AS Nombre del empleado. Anota el Msg de sintaxis.
+SELECT nombre AS Nombre del empleado FROM Empleados4;
+
+Mens. 102, Nivel 15, Estado 1, Línea 103
+Incorrect syntax near 'del'.
+
+Hora de finalización: 2026-06-14T16:27:50.2058846-06:00
+--  14.	PROVOCA EL ERROR: Olvida las comillas del separador: nombre + - + apellido. Anota el Msg.
+--15.Cierra: 2 líneas sobre dónde usarás alias en Magna (reportes con nombres de negocio: [Salario Mensual],[Planta]) sin tocar las tablas reales.}
+
+
+
+
+
+
+
+
