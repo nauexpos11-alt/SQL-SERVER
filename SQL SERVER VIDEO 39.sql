@@ -7,11 +7,23 @@ VIDEO 39: INNER JOIN — ON t1.col = t2.col
 -- 1. (bases de datos relacionales, FOREIGN KEY, INNER JOIN)
 --    Une Empleados4 con Plantas por id_planta.
 --    Muestra nombre, apellido del empleado y nombre de la planta.
+exec sp_help empleados4
+select * from empleados4;
+select * from plantas;
+
+select empleados4.nombre, empleados4.apellido, plantas.nombre
+from plantas
+inner join empleados4 on plantas.id_planta = empleados4.id_planta
 
 
 -- 2. (INNER JOIN, ORDER BY)
 --    Repite el ejercicio 1 pero ordena por nombre de planta ASC
 --    y dentro de cada planta por apellido del empleado ASC.
+
+select empleados4.nombre, empleados4.apellido, plantas.nombre
+from plantas
+inner join empleados4 on plantas.id_planta = empleados4.id_planta
+order by plantas.nombre asc, empleados4.apellido asc;
 
 
 -- 3. (INNER JOIN, IS NULL / IS NOT NULL)
@@ -19,19 +31,33 @@ VIDEO 39: INNER JOIN — ON t1.col = t2.col
 --    Muestra solo los empleados que SI tienen planta asignada.
 --    Cuantos son? Sofia (id_planta NULL) aparece o no?
 --    Explica por que INNER JOIN la excluye automaticamente.
-
+select empleados4.*, plantas.*
+from plantas
+inner join empleados4 on plantas.id_planta = empleados4.id_planta
+where empleados4.id_planta is not null 
 
 -- 4. (INNER JOIN, operadores relacionales)
 --    Une Empleados4 con Plantas.
 --    Muestra nombre del empleado, puesto y nombre de la planta
 --    SOLO de la planta cuyo nombre sea 'Cosma Saltillo'.
-
+select empleados4.nombre,empleados4.puesto, plantas.nombre
+from plantas
+inner join empleados4 on plantas.id_planta = empleados4.id_planta
+where plantas.nombre = 'Cosma Saltillo'
 
 -- 5. (INNER JOIN, SUM/AVG/COUNT, GROUP BY)
 --    Une Empleados4 con Plantas.
 --    Para cada nombre de planta, muestra cuantos empleados tiene
 --    y cual es su salario promedio.
 --    Agrupa por nombre de planta.
+select * from plantas;
+SELECT 
+    plantas.nombre AS nombre_planta, 
+    COUNT(empleados4.id_empleado) AS total_empleados, 
+    AVG(empleados4.salario) AS salario_promedio
+FROM plantas
+INNER JOIN empleados4 ON plantas.id_planta = empleados4.id_planta
+GROUP BY plantas.nombre;
 
 
 -- 6. (INNER JOIN, MAX y MIN)
